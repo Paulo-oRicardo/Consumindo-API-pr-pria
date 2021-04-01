@@ -1,25 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import api from './api';
+import style from './styles/app.module.css';
+class App extends Component{
+  state= {
+    artigos:[],
+  }
+  //Executa antes de outras funções
+  async componentDidMount(){
+    const response = await api.get('artigo');
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    this.setState({artigos:response.data})
+  }
+
+  render(){
+    const {artigos} = this.state;
+    return (
+      <div className={style.containerArtigos}>
+        <h1 >Consumindo própria API</h1>
+         <ul className={style.ulArtigos}>    
+           <h2>Listar Artigos</h2>
+            { artigos.map(artigo => (
+              <li key={artigo._id}>
+                <h3><strong>Título: </strong> {artigo.titulo}</h3>
+                <p><strong>Conteúdo: </strong>  {artigo.conteudo} </p>
+              </li>
+            ))}
+         </ul>
+      </div>
+    );
+  };
+};
 
 export default App;
